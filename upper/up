@@ -17,7 +17,7 @@ themes=$base/$app"/themes"
 backup=$base/$app"/bu"
 data=$base/$app/".local"
 etc=$script/"etc"
-dirs=$server,$backup,$adds,$data,$themes,$etc
+dirs=$server,$backup,$adds,$data,$themes
 
 echo "Stoping $app application..."
 sudo service $app stop
@@ -26,45 +26,49 @@ echo -e "\n"
 sleep 2
 
 if [ -d $server ]; then
-    echo "Found, $server is going to be saved..."
+    echo "Found server files, $server is going to be saved..."
     echo -e "\n"
-    sleep 2
+    sleep 1
     echo "Cleanup folder $server of $user"
     cd $server
     sudo pyclean .
     echo -e "\n"
-    sleep 2
+    sleep 1
     now=`date +%F_%T`
-    filename="SYS__"$app".$now.zip"
+    filename="sys_"$app".$now.zip"
     srv_bup_file=$backup/$filename
     zip -r $srv_bup_file  $server
-    echo "Backup $srv_bup_file can be found here: $backup..."
+    echo "Backup of $srv_bup_file can be found here: $backup..."
     echo -e "\n"
     echo "Removing old server & addons files..."
     rm -rf $server $adds
+else
+    echo "No found any server files, $server is going to be installed..."
 fi
 
 echo -e "\n"
 sleep 2
+
 echo "Create folders for application $app..."
 echo -e "\n"
 sleep 1
 
 if [ ! -d $dirs ]; then
     echo "Creating $app $dirs..."
-    sudo mkdir -p {$server,$backup,$adds,$data,$themes,$etc}
-    sleep 1
+    sudo mkdir -p {$server,$backup,$adds,$data,$themes}
 fi
 
+sleep 1
 echo -e "\n"
+
 echo "Check if checkoutmanager installed..."
 echo -e "\n"
 sleep 1
 
 if which checkoutmanager >/dev/null; then
-    echo "checkoutmanager is installed"
+    echo "Checkoutmanager is installed..."
 else
-    echo "checkoutmanager will be installed"
+    echo "Checkoutmanager will be installed..."
     sudo pip install checkoutmanager
 fi
 
@@ -79,14 +83,21 @@ else
     sudo checkoutmanager up
 fi
 
-sleep 1
 echo -e "\n"
+sleep 1
+
 echo "Prepairing git checkout..."
 echo -e "\n"
 sleep 1
-echo "Do checkout... Version?"
+
+echo "Do git checkout..."
+echo -e "\n"
+sleep 1
+
+echo "Version?"
 echo -e "\n"
 read version
+
 echo -e "\n"
 sleep 1
 
@@ -99,6 +110,7 @@ for f in `find $1 -maxdepth 1 -type d`;
         echo -e "\n"
     done
 
+echo -e "\n"
 sleep 1
 
 cd $src/VAR
@@ -110,6 +122,7 @@ for f in `find $1 -maxdepth 1 -type d`;
         echo -e "\n"
     done
 
+echo -e "\n"
 sleep 1
 
 echo "Copying $app data from $src to $app $server..."
@@ -144,12 +157,13 @@ su $user -c $script/exec_script
 sleep 1
 echo -e "\n"
 echo "Starting $app application..."
-sudo service $app start
+sudo service $app restart
 
 echo -e "\n"
 sleep 2
 
 echo "Status of $app application..."
 echo -e "\n"
-sleep 2
+sleep 3
+
 sudo service $app status -l
