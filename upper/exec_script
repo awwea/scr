@@ -11,13 +11,13 @@ echo -e "\n"
 user=$app
 base="/var/www"
 src="/var/opt/git/odoo"
-script="/var/opt/git/scr"
+script="/var/opt/git/scr/upper"
 server=$base/$app"/srv"
-adds=$base/$app"/adds/"
+adds=$base/$app"/adds"
 themes=$base/$app"/themes"
 backup=$base/$app"/bu"
-data=$base/$app"/.local"
-etc=$script"/etc/"
+data=$base/$app/".local"
+etc=$script/"etc"
 dirs=$server,$backup,$adds,$data,$themes,$etc
 
 echo "Backup & update database, which database?: "

@@ -10,13 +10,13 @@ echo -e "\n"
 app=$user
 base="/var/www"
 src="/var/opt/git/odoo"
-script="/var/opt/git/scr"
+script="/var/opt/git/scr/upper"
 server=$base/$app"/srv"
 adds=$base/$app"/adds"
 themes=$base/$app"/themes"
 backup=$base/$app"/bu"
-data=$base/$app"/.local"
-etc=$script"/etc/"
+data=$base/$app/".local"
+etc=$script/"etc"
 dirs=$server,$backup,$adds,$data,$themes,$etc
 
 echo "Stoping $app application..."
@@ -71,7 +71,7 @@ fi
 echo -e "\n"
 sleep 2
 
-if [ ! -d $source ]; then
+if [ ! -d $src ]; then
     echo "Clone lastest branch $app - application.."
     sudo checkoutmanager co
 else
@@ -121,7 +121,7 @@ echo -e "\n"
 echo "Copiying $adds data from $src to $app $server"
 echo -e "\n"
 sleep 1
-cp -rf $(<$script/etc/$app) $adds
+cp -rf $(<$etc/$app) $adds
 
 echo "Settings permissions to $server..."
 echo -e "\n"
@@ -135,7 +135,6 @@ echo "Prepairing application..."
 echo -e "\n"
 sleep 2
 
-############## Run script as different user ##############
 sudo chown -cR $user:$user $script/exec_script
 
 echo -e "\n"
@@ -146,8 +145,10 @@ sleep 1
 echo -e "\n"
 echo "Starting $app application..."
 sudo service $app start
+
 echo -e "\n"
 sleep 2
+
 echo "Status of $app application..."
 echo -e "\n"
 sleep 2
