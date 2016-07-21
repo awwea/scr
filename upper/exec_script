@@ -11,7 +11,7 @@ echo -e "\n"
 user=$app
 base="/var/www"
 src="/var/opt/git/odoo"
-script=$src"/VAR/oo-adds/upper"
+script="/var/opt/git/scr"
 server=$base/$app"/srv"
 adds=$base/$app"/adds/"
 themes=$base/$app"/themes"
