@@ -1,0 +1,154 @@
+#!/bin/bash
+
+
+echo -e "\n"
+echo "Which User???"
+echo -e "\n"
+read user
+echo -e "\n"
+
+app=$user
+base="/var/www"
+src="/var/opt/git/odoo"
+script=$src"/VAR/oo-adds/upper"
+server=$base/$app"/srv"
+adds=$base/$app"/adds"
+themes=$base/$app"/themes"
+backup=$base/$app"/bu"
+data=$base/$app"/.local"
+etc=$script"/etc/"
+dirs=$server,$backup,$adds,$data,$themes,$etc
+
+echo "Stoping $app application..."
+sudo service $app stop
+cd $base
+echo -e "\n"
+sleep 2
+
+if [ -d $server ]; then
+    echo "Found, $server is going to be saved..."
+    echo -e "\n"
+    sleep 2
+    echo "Cleanup folder $server of $user"
+    cd $server
+    sudo pyclean .
+    echo -e "\n"
+    sleep 2
+    now=`date +%F_%T`
+    filename="SYS__"$app".$now.zip"
+    srv_bup_file=$backup/$filename
+    zip -r $srv_bup_file  $server
+    echo "Backup $srv_bup_file can be found here: $backup..."
+    echo -e "\n"
+    echo "Removing old server & addons files..."
+    rm -rf $server $adds
+fi
+
+echo -e "\n"
+sleep 2
+echo "Create folders for application $app..."
+echo -e "\n"
+sleep 1
+
+if [ ! -d $dirs ]; then
+    echo "Creating $app $dirs..."
+    sudo mkdir -p {$server,$backup,$adds,$data,$themes,$etc}
+    sleep 1
+fi
+
+echo -e "\n"
+echo "Check if checkoutmanager installed..."
+echo -e "\n"
+sleep 1
+
+if which checkoutmanager >/dev/null; then
+    echo "checkoutmanager is installed"
+else
+    echo "checkoutmanager will be installed"
+    sudo pip install checkoutmanager
+fi
+
+echo -e "\n"
+sleep 2
+
+if [ ! -d $source ]; then
+    echo "Clone lastest branch $app - application.."
+    sudo checkoutmanager co
+else
+    echo "Pull lastest branch $app - application.."
+    sudo checkoutmanager up
+fi
+
+sleep 1
+echo -e "\n"
+echo "Prepairing git checkout..."
+echo -e "\n"
+sleep 1
+echo "Do checkout... Version?"
+echo -e "\n"
+read version
+echo -e "\n"
+sleep 1
+
+cd $src/OCA
+for f in `find $1 -maxdepth 1 -type d`;
+    do
+        cd $f
+        sleep 0.4
+        git checkout $version
+        echo -e "\n"
+    done
+
+sleep 1
+
+cd $src/VAR
+for f in `find $1 -maxdepth 1 -type d`;
+    do
+        cd $f
+        sleep 0.4
+        git checkout $version
+        echo -e "\n"
+    done
+
+sleep 1
+
+echo "Copying $app data from $src to $app $server..."
+echo -e "\n"
+sleep 1
+cp -rf $src/OCA/OCB/{addons,openerp,openerp-gevent,odoo.py,openerp-server,openerp-wsgi.py,debian,doc} $server
+
+echo -e "\n"
+echo "Copiying $adds data from $src to $app $server"
+echo -e "\n"
+sleep 1
+cp -rf $(<$script/etc/$app) $adds
+
+echo "Settings permissions to $server..."
+echo -e "\n"
+sleep 2
+
+sudo chown -R $user:$user $base/$app
+echo -e "\n"
+sleep 1
+
+echo "Prepairing application..."
+echo -e "\n"
+sleep 2
+
+############## Run script as different user ##############
+sudo chown -cR $user:$user $script/exec_script
+
+echo -e "\n"
+sleep 1
+su $user -c $script/exec_script
+
+sleep 1
+echo -e "\n"
+echo "Starting $app application..."
+sudo service $app start
+echo -e "\n"
+sleep 2
+echo "Status of $app application..."
+echo -e "\n"
+sleep 2
+sudo service $app status -l
