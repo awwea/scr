@@ -140,7 +140,7 @@ echo "Settings permissions to $server..."
 echo -e "\n"
 sleep 2
 
-sudo chown -R $user:$user $base/$app
+sudo chown -cR $user:$user $base/$app
 echo -e "\n"
 sleep 1
 

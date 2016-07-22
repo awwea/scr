@@ -87,6 +87,9 @@
 /var/opt/git/*/VAR/*/sale_shop
 /var/opt/git/*/VAR/*/theme_mercury
 /var/opt/git/*/VAR/*/website_sale_clear_cart
+/var/opt/git/*/VAR/*/website_contact_snippet
 /var/opt/git/*/VAR/*/website_seo
 /var/opt/git/*/VAR/*/website_seo_blog
+/var/opt/git/*/VAR/*/website_seo_sale
+/var/opt/git/*/VAR/*/website_blog_filter_posts
 /var/opt/git/*/VAR/*/website_social_media_icon_extention
