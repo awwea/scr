@@ -11,7 +11,7 @@ app=$user
 base="/var/www"
 src="/var/opt/git/odoo"
 script="/var/opt/git/scr/upper"
-server=$base/$app"/srv"
+server=$base/$app"/env"
 adds=$base/$app"/adds"
 themes=$base/$app"/themes"
 backup=$base/$app"/bu"
@@ -36,11 +36,11 @@ if [ -d $server ]; then
     sleep 1
     now=`date +%F_%T`
     filename="sys_"$app".$now.zip"
-    srv_bup_file=$backup/$filename
-    zip -r $srv_bup_file  $server
+    bup_file=$backup/$filename
+    zip -r $bup_file  $server
     echo "Backup of $srv_bup_file can be found here: $backup..."
     echo -e "\n"
-    echo "Removing old server & addons files..."
+    echo "Removing old server- & addons- files..."
     rm -rf $server $adds
 else
     echo "No found any server files, $server is going to be installed..."

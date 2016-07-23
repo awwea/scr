@@ -12,13 +12,13 @@ user=$app
 base="/var/www"
 src="/var/opt/git/odoo"
 script="/var/opt/git/scr/upper"
-server=$base/$app"/srv"
+server=$base/$app"/env"
 adds=$base/$app"/adds"
 themes=$base/$app"/themes"
 backup=$base/$app"/bu"
 data=$base/$app/".local"
 etc=$script/"etc"
-dirs=$server,$backup,$adds,$data,$themes,$etc
+dirs=$server,$backup,$adds,$data,$themes
 
 echo "Backup & update database, which database?: "
 echo -e "\n"
@@ -26,17 +26,17 @@ read db
 echo -e "\n"
 
 if [ "$db" != "" ]; then
-  echo "$db is going to be saved..."
-  echo -e "\n"
-  sleep 2
-  now=$(date +"%Y-%m-%d_%H-%M-%S")
-  filename="DB__$db.$now.gz"
-  db_bup_file=$backup"/"$filename
-  pg_dump $db | gzip -c > $db_bup_file
-  echo "Backup of db can be founded here: $db_bup_file..."
-  echo -e "\n"
+    echo "$db is going to be saved..."
+    echo -e "\n"
+    sleep 2
+    now=$(date +"%Y-%m-%d_%H-%M-%S")
+    filename="DB__$db.$now.gz"
+    bu_file=$backup/$filename
+    pg_dump $db | gzip -c > $bu_file
+    echo "Backup of $db can be founded here: $bu_file ..."
+    echo -e "\n"
 else
-  echo "No backup has been made."
+    echo "No backup has been made."
 fi
 
 echo -e "\n"
@@ -45,18 +45,21 @@ echo -e "\n"
 sleep 1
 
 if [ "$db" != "" ]; then
-  echo "$db is going to be updated..."
-  sleep 1
-  echo -e "\n"
-  echo "Going to update $db "
-  sleep 1
-  echo -e "\n"
-  cd $server
-  ./odoo.py --update=all --workers=0 --no-xmlrpc --stop-after-init --database=$db --addons-path=$server/addons,$base/$app/adds
+    echo "$db is going to be updated..."
+    echo -e "\n"
+    sleep 1
+    echo "Going to update $db "
+    echo -e "\n"
+    sleep 1
+    cd $server
+    ./odoo.py --update=all --workers=0 --no-xmlrpc --stop-after-init --database=$db --addons-path=$server/addons,$base/$app/adds
 else
-  echo "Nothing backuped!"
-  sleep 1
-  echo -e "\n"
+    echo "Nothing backuped!"
 fi
 
+echo -e "\n"
+sleep 1
+
 echo "Finished! All Done."
+echo -e "\n"
+sleep 1
